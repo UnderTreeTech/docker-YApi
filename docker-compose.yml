@@ -3,29 +3,34 @@ version: '3'
 services:
   yapi-web:
     image: jayfong/yapi:latest
-    container_name: yapi-web
+    container_name: yapi
     ports:
-      - 40001:3000
+      - 3000:3000
     environment:
       - YAPI_ADMIN_ACCOUNT=admin@docker.yapi
       - YAPI_ADMIN_PASSWORD=adm1n
       - YAPI_CLOSE_REGISTER=true
-      - YAPI_DB_SERVERNAME=yapi-mongo
+      - YAPI_DB_SERVERNAME=mongo-yapi
       - YAPI_DB_PORT=27017
       - YAPI_DB_DATABASE=yapi
       - YAPI_MAIL_ENABLE=false
       - YAPI_LDAP_LOGIN_ENABLE=false
       - YAPI_PLUGINS=[]
     depends_on:
-      - yapi-mongo
-    links:
-      - yapi-mongo
+      - mongo-yapi
+    networks:
+      - yapi
     restart: unless-stopped
-  yapi-mongo:
-    image: mongo:latest
-    container_name: yapi-mongo
+  mongo-yapi:
+    image: mongo:3.6.21-xenial
+    container_name: mongo-yapi
     volumes:
-      - ./data/db:/data/db
+      - mongo-yapi:/data/yapi-mongo
     expose:
       - 27017
     restart: unless-stopped
+    networks:
+      - yapi
+networks:
+  yapi:
+    external: true
