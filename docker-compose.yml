@@ -25,7 +25,7 @@ services:
     image: mongo:3.6.21-xenial
     container_name: mongo-yapi
     volumes:
-      - mongo-yapi:/data/yapi-mongo
+      - /data/mongo-yapi:/data/db
     expose:
       - 27017
     restart: unless-stopped
